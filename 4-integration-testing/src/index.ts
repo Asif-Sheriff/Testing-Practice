@@ -1,25 +1,28 @@
-import { Request, Response } from 'express';
-import express from 'express';
-import {prisma} from './db';
+import express, { Request, Response } from "express";
+import { prisma } from "./db";
 
 export const app = express();
 
-// Add middleware to parse JSON request bodies
 app.use(express.json());
 
-app.post("/sum", async (req: Request, res: Response) : Promise<any> => {
+app.post("/sum", async (req : Request, res : Response ) : Promise<any> => {
     const a = req.body.a;
     const b = req.body.b;
-
+    
+    if (a > 1000000 || b > 1000000) {
+        return res.status(422).json({
+            message: "Sorry we dont support big numbers"
+        })
+    }
     const result = a + b;
 
-    await prisma.request.create({
-        data : {
+    const request = await prisma.request.create({
+        data: {
             a: a,
             b: b,
-            result,
+            result: result,
         }
     })
-
-    return res.json({ result });
-});
+    
+    res.json({ answer: result, id: request.id });
+})
