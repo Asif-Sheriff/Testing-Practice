@@ -1,0 +1,3 @@
+__mock__ is a folder that you can create and you can put all of your mocking logic into this folder.
+
+note that this folder must be on  the same level as the function you are trying to mock
